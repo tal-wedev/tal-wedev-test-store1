@@ -1,0 +1,86 @@
+{% comment %}
+  name is for the name of the section
+  settings is the type of the section that we can use in the customizer
+  in the settings we can:
+  type - means which type can that section hold
+  id - what is the name of that type that we can choose, also this is the id that we can use through code!!
+  label - what will be written to the customer 
+
+  the presets will show the name on the customizer editor of that current section
+{% endcomment %}
+<div class="quantity-indicator">
+
+  {% if product.variants.first.inventory_quantity <= 0 %}
+    <p>No stock message: {{ section.settings.no_stock_message }} - this product is out of stock</p>
+  {% else %}
+    <p>{{ section.settings.text }}</p>  
+    <p>This is the quantity of this product: {{ product.variants.first.inventory_quantity }}</p>
+    <p>Variant ID: {{ product.variants.first.id }}</p>
+  <div>
+    {% comment %}
+      this for some reason won't work! ask for help at work if i cannot get this right until i go to work
+    {% endcomment %}
+      <form method="post" action="/cart/add">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        <input type="hidden" name="properties[special_product]" value="true">
+
+        <button type="submit">הוסף לעגלה</button>
+      </form>
+    </div>
+  {% endif %}
+
+  <div>
+    {% form 'contact' %}
+      {{ form.errors | default_errors }}
+
+      <div class="first_name">
+          <label for="first_name">First Name</label>
+          <input type="text" name="contact[first_name]" id="first_name"/>
+      </div>
+      <div class="last_name">
+        <label for="last_name">Last Name</label>
+        <input type="text" name="contact[last_name]" id="last_name"/>
+      </div>
+      <div class="email">
+        <label for="email">Email</label>
+        <input type="email" name="contact[email]" id="email"/>
+      </div>
+
+      <div class="phone">
+        <label for="phone">Phone Number</label>
+        <input type="tel" name="contact[phone]" id="phone"/>
+      </div>
+
+      <div class="order-number">
+        <label for="order_number">Order Number</label>
+        <input type="text" name="contact[order_number]" id="order_number"/>
+      </div>
+
+    <div>
+      <button type="submit" value="create">Submit Contact Form</button>
+    </div>
+
+      {% endform %}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Quantity Indicator",
+    "settings": [{
+      "type" : "text",
+      "id": "text",
+      "label" : "text"
+    },
+    {
+      "type":"text",
+      "id": "no_stock_message",
+      "label": "No Stock Message"
+    }],
+    "presets": [{
+      "name" : "Quantity Indicator"
+    }]
+  }
+{% endschema %}
+
